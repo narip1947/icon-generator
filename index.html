@@ -1,1 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Icon Generator Pro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: white;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+
+    .header {
+      padding: 25px;
+      text-align: center;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+    }
+
+    .header h1 {
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      line-height: 1.5;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 25px;
+    }
+
+    .controls,
+    .preview-section {
+      background: rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: #f8fafc;
+    }
+
+    .control-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    input[type="color"] {
+      height: 55px;
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    select option {
+      color: black;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      min-width: 140px;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .generate-btn {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      color: white;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59,130,246,0.4);
+    }
+
+    .reset-btn {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: white;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(239,68,68,0.4);
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #10b981, #22c55e);
+      color: white;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(34,197,94,0.4);
+    }
+
+    .preview-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 360px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-radius: 18px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    #iconCanvas {
+      border-radius: 25px;
+      background: white;
+      max-width: 100%;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    .info-box {
+      margin-top: 25px;
+      background: rgba(255,255,255,0.05);
+      padding: 18px;
+      border-radius: 16px;
+      line-height: 1.7;
+    }
+
+    .info-box h3 {
+      margin-bottom: 10px;
+      color: #93c5fd;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 18px;
+      color: #cbd5e1;
+      font-size: 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @media (max-width: 850px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 20px 15px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>🎨 Icon Generator Pro</h1>
+      <p>
+        Create beautiful custom icons instantly. Change colors, shapes, text,
+        gradients, and download high-quality PNG icons for websites, apps,
+        branding, and social media.
+      </p>
+    </div>
+
+    <div class="container">
+      <div class="controls">
+        <h2 class="section-title">Customize Icon</h2>
+
+        <div class="control-group">
+          <label>Icon Text</label>
+          <input type="text" id="iconText" maxlength="3" value="IG" placeholder="Enter initials" />
+        </div>
+
+        <div class="control-group">
+          <label>Background Color</label>
+          <input type="color" id="bgColor" value="#7c3aed" />
+        </div>
+
+        <div class="control-group">
+          <label>Text Color</label>
+          <input type="color" id="textColor" value="#ffffff" />
+        </div>
+
+        <div class="control-group">
+          <label>Icon Shape</label>
+          <select id="shape">
+            <option value="rounded">Rounded Square</option>
+            <option value="circle">Circle</option>
+            <option value="square">Square</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Font Size</label>
+          <input type="range" id="fontSize" min="40" max="140" value="90" />
+        </div>
+
+        <div class="control-group">
+          <label>Gradient Style</label>
+          <select id="gradientStyle">
+            <option value="solid">Solid Color</option>
+            <option value="diagonal">Diagonal Gradient</option>
+            <option value="vertical">Vertical Gradient</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button class="generate-btn" onclick="generateIcon()">Generate Icon</button>
+          <button class="reset-btn" onclick="resetForm()">Reset</button>
+        </div>
+
+        <div class="info-box">
+          <h3>📘 How To Use</h3>
+          <p>
+            1. Enter text or initials for your icon.<br>
+            2. Select colors, shape, and style.<br>
+            3. Click <strong>Generate Icon</strong>.<br>
+            4. Download your icon as PNG.
+          </p>
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <h2 class="section-title">Live Preview</h2>
+
+        <div class="preview-wrapper">
+          <canvas id="iconCanvas" width="300" height="300"></canvas>
+        </div>
+
+        <button class="download-btn" onclick="downloadIcon()">⬇ Download PNG</button>
+
+        <div class="info-box">
+          <h3>✨ App Features</h3>
+          <p>
+            • Fully Responsive & Mobile Friendly<br>
+            • High Quality PNG Export<br>
+            • Attractive Modern UI Design<br>
+            • Gradient & Shape Customization<br>
+            • Fast Real-Time Icon Generation
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Built with HTML, CSS & JavaScript • Icon Generator Pro
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('iconCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function generateIcon() {
+      const text = document.getElementById('iconText').value || 'IG';
+      const bgColor = document.getElementById('bgColor').value;
+      const textColor = document.getElementById('textColor').value;
+      const shape = document.getElementById('shape').value;
+      const fontSize = document.getElementById('fontSize').value;
+      const gradientStyle = document.getElementById('gradientStyle').value;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let fillStyle = bgColor;
+
+      if (gradientStyle !== 'solid') {
+        let gradient;
+
+        if (gradientStyle === 'diagonal') {
+          gradient = ctx.createLinearGradient(0, 0, 300, 300);
+        } else {
+          gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        }
+
+        gradient.addColorStop(0, bgColor);
+        gradient.addColorStop(1, '#111827');
+        fillStyle = gradient;
+      }
+
+      ctx.fillStyle = fillStyle;
+
+      if (shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(150, 150, 130, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (shape === 'square') {
+        ctx.fillRect(25, 25, 250, 250);
+      } else {
+        roundRect(ctx, 25, 25, 250, 250, 45, true, false);
+      }
+
+      ctx.fillStyle = textColor;
+      ctx.font = `bold ${fontSize}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text.toUpperCase(), 150, 155);
+    }
+
+    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+      if (typeof radius === 'number') {
+        radius = { tl: radius, tr: radius, br: radius, bl: radius };
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(x + radius.tl, y);
+      ctx.lineTo(x + width - radius.tr, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+      ctx.lineTo(x + width, y + height - radius.br);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+      ctx.lineTo(x + radius.bl, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+      ctx.lineTo(x, y + radius.tl);
+      ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+      ctx.closePath();
+
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function downloadIcon() {
+      const link = document.createElement('a');
+      link.download = 'icon-generator-pro.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+
+    function resetForm() {
+      document.getElementById('iconText').value = 'IG';
+      document.getElementById('bgColor').value = '#7c3aed';
+      document.getElementById('textColor').value = '#ffffff';
+      document.getElementById('shape').value = 'rounded';
+      document.getElementById('fontSize').value = '90';
+      document.getElementById('gradientStyle').value = 'solid';
+
+      generateIcon();
+    }
+
+    window.onload = generateIcon;
+  </script>
+</body>
+</html>
